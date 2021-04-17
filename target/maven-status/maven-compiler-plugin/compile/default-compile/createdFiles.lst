@@ -2,5 +2,6 @@ cz\maku\friday\server\ServerManager.class
 cz\maku\friday\command\ServerCmd.class
 cz\maku\friday\Friday.class
 cz\maku\friday\server\Config.class
+cz\maku\friday\command\PluginsCmd.class
 cz\maku\friday\server\Server.class
 cz\maku\friday\server\ServerId.class

@@ -1,5 +1,6 @@
 package cz.maku.friday;
 
+import cz.maku.friday.command.PluginsCmd;
 import cz.maku.friday.command.ServerCmd;
 import cz.maku.friday.server.ServerManager;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class Friday extends Plugin {
         instance = this;
         serverManager = new ServerManager();
         getProxy().getPluginManager().registerCommand(this, new ServerCmd());
+        getProxy().getPluginManager().registerCommand(this, new PluginsCmd());
     }
 
     @Override
