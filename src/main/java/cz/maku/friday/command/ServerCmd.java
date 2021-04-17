@@ -51,28 +51,34 @@ public class ServerCmd extends Command implements TabExecutor {
                 if (pp.hasPermission("friday.server.create")) {
                     if (args.length < 2) {
                         pp.sendMessage("§cInvalid server name.");
-                        pp.sendMessage("§c/server create <name> <port> <defaultMotd>");
+                        pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
                         return;
                     }
                     if (args.length < 3) {
-                        pp.sendMessage("§cInvalid port.");
-                        pp.sendMessage("§c/server create <name> <port> <defaultMotd>");
+                        pp.sendMessage("§cInvalid ip.");
+                        pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
                         return;
                     }
                     if (args.length < 4) {
-                        pp.sendMessage("§cInvalid motd.");
-                        pp.sendMessage("§c/server create <name> <port> <defaultMotd>");
+                        pp.sendMessage("§cInvalid port.");
+                        pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
                         return;
                     }
-                    if (!args[2].matches("\\d+")) {
+                    if (args.length < 5) {
+                        pp.sendMessage("§cInvalid motd.");
+                        pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
+                        return;
+                    }
+                    if (!args[3].matches("\\d+")) {
                         pp.sendMessage("§cInvalid port. Must be number!");
-                        pp.sendMessage("§c/server create <name> <port> <defaultMotd>");
+                        pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
                         return;
                     }
                     String serverName = args[1];
-                    int port = Integer.parseInt(args[2]);
-                    String motd = args[3];
-                    Friday.getInstance().getServerManager().addServer(serverName, new InetSocketAddress(port), motd, false);
+                    String ip = args[2];
+                    int port = Integer.parseInt(args[3]);
+                    String motd = args[4];
+                    Friday.getInstance().getServerManager().addServer(serverName, new InetSocketAddress(ip, port), motd, false);
                     pp.sendMessage("§aServer '" + serverName + "' has been created. You can show informations about this server with '/server info " + serverName + "'.");
                 } else {
                     pp.sendMessage("§cYou're not allowed to do this.");
