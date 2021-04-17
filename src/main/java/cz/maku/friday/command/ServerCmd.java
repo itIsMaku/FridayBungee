@@ -29,84 +29,76 @@ public class ServerCmd extends Command implements TabExecutor {
                 return;
             }
             if (args[0].equalsIgnoreCase("test")) {
-                if (pp.hasPermission("friday.server.create")) {
-                    if (args.length < 2) {
-                        pp.sendMessage("§cInvalid server name.");
-                        return;
-                    }
-                    String serverName = args[1];
-                    if (serverName.equalsIgnoreCase("Basic")) {
-                        Server server = new Server("Basic", 20, false, new InetSocketAddress(25588), "basic");
-                        Friday.getInstance().getServerManager().addServer(server, false);
-                    } else if (serverName.equalsIgnoreCase("Dev")) {
-                        Server server = new Server("Dev", 5, true, new InetSocketAddress(25599), "dev");
-                        Friday.getInstance().getServerManager().addServer(server, false);
-                    } else {
-                        pp.sendMessage("§cInvalid server name. Provide 'Basic' or 'Dev'.");
-                    }
+                if (!pp.hasPermission("friday.server.create")) return;
+                if (args.length < 2) {
+                    pp.sendMessage("§cInvalid server name.");
+                    return;
+                }
+                String serverName = args[1];
+                if (serverName.equalsIgnoreCase("Basic")) {
+                    Server server = new Server("Basic", 20, false, new InetSocketAddress(25588), "basic");
+                    Friday.getInstance().getServerManager().addServer(server, false);
+                } else if (serverName.equalsIgnoreCase("Dev")) {
+                    Server server = new Server("Dev", 5, true, new InetSocketAddress(25599), "dev");
+                    Friday.getInstance().getServerManager().addServer(server, false);
                 } else {
-                    pp.sendMessage("§cYou're not allowed to do this.");
+                    pp.sendMessage("§cInvalid server name. Provide 'Basic' or 'Dev'.");
                 }
             } else if (args[0].equalsIgnoreCase("create")) {
-                if (pp.hasPermission("friday.server.create")) {
-                    if (args.length < 2) {
-                        pp.sendMessage("§cInvalid server name.");
-                        pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
-                        return;
-                    }
-                    if (args.length < 3) {
-                        pp.sendMessage("§cInvalid ip.");
-                        pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
-                        return;
-                    }
-                    if (args.length < 4) {
-                        pp.sendMessage("§cInvalid port.");
-                        pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
-                        return;
-                    }
-                    if (args.length < 5) {
-                        pp.sendMessage("§cInvalid motd.");
-                        pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
-                        return;
-                    }
-                    if (!args[3].matches("\\d+")) {
-                        pp.sendMessage("§cInvalid port. Must be number!");
-                        pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
-                        return;
-                    }
-                    String serverName = args[1];
-                    String ip = args[2];
-                    int port = Integer.parseInt(args[3]);
-                    String motd = args[4];
-                    Friday.getInstance().getServerManager().addServer(serverName, new InetSocketAddress(ip, port), motd, false);
-                    pp.sendMessage("§aServer '" + serverName + "' has been created. You can show informations about this server with '/server info " + serverName + "'.");
-                } else {
-                    pp.sendMessage("§cYou're not allowed to do this.");
+                if (!pp.hasPermission("friday.server.create")) return;
+                if (args.length < 2) {
+                    pp.sendMessage("§cInvalid server name.");
+                    pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
+                    return;
                 }
+                if (args.length < 3) {
+                    pp.sendMessage("§cInvalid ip.");
+                    pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
+                    return;
+                }
+                if (args.length < 4) {
+                    pp.sendMessage("§cInvalid port.");
+                    pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
+                    return;
+                }
+                if (args.length < 5) {
+                    pp.sendMessage("§cInvalid motd.");
+                    pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
+                    return;
+                }
+                if (!args[3].matches("\\d+")) {
+                    pp.sendMessage("§cInvalid port. Must be number!");
+                    pp.sendMessage("§c/server create <name> <ip> <port> <defaultMotd>");
+                    return;
+                }
+                String serverName = args[1];
+                String ip = args[2];
+                int port = Integer.parseInt(args[3]);
+                String motd = args[4];
+                Friday.getInstance().getServerManager().addServer(serverName, new InetSocketAddress(ip, port), motd, false);
+                pp.sendMessage("§aServer '" + serverName + "' has been created. You can show informations about this server with '/server info " + serverName + "'.");
             } else if (args[0].equalsIgnoreCase("list")) {
-                if (pp.hasPermission("friday.server.list")) {
-                    pp.sendMessage("§8[§9Server§8] §7Players: §3" + ProxyServer.getInstance().getPlayers().size());
-                    pp.sendMessage("§8[§9Server§8] §7Servers:");
-                    ProxyServer.getInstance().getServers().forEach((name, info) -> {
-                        String players = "";
-                        for (ProxiedPlayer p : info.getPlayers()) {
-                            players += p.getName() + ", ";
-                        }
-                        pp.sendMessage(" §3" + name + " §8- §7Players: §b" + info.getPlayers().size());
-                        pp.sendMessage("    §7Players list: §b" + players);
-                        pp.sendMessage("");
-                    });
-                } else {
-                    pp.sendMessage("§cYou're not allowed to do this.");
-                }
+                if (!pp.hasPermission("friday.server.list")) return;
+                pp.sendMessage("§8[§9Server§8] §7Players: §3" + ProxyServer.getInstance().getPlayers().size());
+                pp.sendMessage("§8[§9Server§8] §7Servers:");
+                ProxyServer.getInstance().getServers().forEach((name, info) -> {
+                    String players = "";
+                    for (ProxiedPlayer p : info.getPlayers()) {
+                        players += p.getName() + ", ";
+                    }
+                    pp.sendMessage(" §3" + name + " §8- §7Players: §b" + info.getPlayers().size());
+                    pp.sendMessage("    §7Players list: §b" + players);
+                    pp.sendMessage("");
+                });
             } else if (args[0].equalsIgnoreCase("info")) {
+                if (!pp.hasPermission("friday.server.info")) return;
                 if (args.length < 2) {
                     pp.sendMessage("§cPlease enter server name.");
                     return;
                 }
                 ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(args[1]);
                 if (serverInfo == null) {
-                    pp.sendMessage("§cServer " + args[1] + " doesn't exist.");
+                    pp.sendMessage("§cServer '" + args[1] + "' doesn't exist.");
                     return;
                 }
                 pp.sendMessage("§8■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■");
@@ -117,30 +109,27 @@ public class ServerCmd extends Command implements TabExecutor {
                 pp.sendMessage("§8■ §7Restricted: §3" + serverInfo.isRestricted());
                 pp.sendMessage("§8■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■");
             } else if (args[0].equalsIgnoreCase("delete")) {
-                if (pp.hasPermission("friday.server.delete")) {
+                if (!pp.hasPermission("friday.server.delete")) return;
 
-                    if (args.length < 2) {
-                        pp.sendMessage("§cPlease enter server name.");
-                        return;
-                    }
-                    ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(args[1]);
-                    if (serverInfo == null) {
-                        pp.sendMessage("§cServer " + args[1] + " doesn't exist.");
-                        return;
-                    }
-                    if (serverInfo.getName().equalsIgnoreCase(pp.getPendingConnection().getListener().getFallbackServer())) {
-                        pp.sendMessage("§cYou can't delete fallback server.");
-                        return;
-                    }
-                    Friday.getInstance().getServerManager().removeServer(args[1]);
-                    pp.sendMessage("§aServer was successfully deleted.");
-                } else {
-                    pp.sendMessage("§cYou're not allowed to do this.");
+                if (args.length < 2) {
+                    pp.sendMessage("§cPlease enter server name.");
+                    return;
                 }
+                ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(args[1]);
+                if (serverInfo == null) {
+                    pp.sendMessage("§cServer '" + args[1] + "' doesn't exist.");
+                    return;
+                }
+                if (serverInfo.getName().equalsIgnoreCase(pp.getPendingConnection().getListener().getFallbackServer())) {
+                    pp.sendMessage("§cYou can't delete fallback server.");
+                    return;
+                }
+                Friday.getInstance().getServerManager().removeServer(args[1]);
+                pp.sendMessage("§aServer was successfully deleted.");
             } else {
                 ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(args[0]);
                 if (serverInfo == null) {
-                    pp.sendMessage("§cServer " + args[0] + " doesn't exist.");
+                    pp.sendMessage("§cServer '" + args[0] + "' doesn't exist.");
                     return;
                 }
                 pp.sendMessage("§8[§9Server§8] §7Connecting to §3" + args[0] + "§7...");
