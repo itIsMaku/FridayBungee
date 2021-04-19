@@ -12,6 +12,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ServerCmd extends Command implements TabExecutor {
 
@@ -127,17 +128,38 @@ public class ServerCmd extends Command implements TabExecutor {
                 Friday.getInstance().getServerManager().removeServer(args[1]);
                 pp.sendMessage("§aServer was successfully deleted.");
             } else {
-                ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(args[0]);
-                if (serverInfo == null) {
-                    pp.sendMessage("§cServer '" + args[0] + "' doesn't exist.");
+                if (args.length < 2) {
+                    ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(args[0]);
+                    if (serverInfo == null) {
+                        pp.sendMessage("§cServer '" + args[0] + "' doesn't exist.");
+                        return;
+                    }
+                    pp.sendMessage("§8[§9Server§8] §7Connecting to §3" + args[0] + "§7...");
+
+                    pp.connect(serverInfo);
                     return;
                 }
-                pp.sendMessage("§8[§9Server§8] §7Connecting to §3" + args[0] + "§7...");
-
-                pp.connect(serverInfo);
+                if (args[1].equalsIgnoreCase("then")) {
+                    if (args.length < 3) {
+                        pp.sendMessage("§cPlease enter server name.");
+                        return;
+                    }
+                    ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(args[0]);
+                    if (serverInfo == null) {
+                        pp.sendMessage("§cServer '" + args[0] + "' doesn't exist.");
+                        return;
+                    }
+                    pp.sendMessage("§8[§9Server§8] §7Connecting to §3" + args[0] + "§7...");
+                    pp.connect(serverInfo);
+                    pp.sendMessage("§8[§9Server§8] §7Waiting §33 §7seconds...");
+                    ProxyServer.getInstance().getScheduler().schedule(Friday.getInstance(), () -> {
+                        pp.sendMessage("§8[§9Server§8] §7Connecting to §3" + args[2] + "§7...");
+                        pp.connect(serverInfo);
+                    }, 3, TimeUnit.SECONDS);
+                    return;
+                }
+                pp.sendMessage("§cInvalid argument.");
             }
-        } else {
-
         }
     }
 
